@@ -14,6 +14,7 @@ Technologies:
 - fxcmpy
 - PostgreSQL
 - FastAPI
+- Semantic UI
 - Jinja2
 
 
