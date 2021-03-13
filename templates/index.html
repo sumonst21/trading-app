@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>List of Symbols </h1>
+
+<div class="ui container">
+    <form method="get">
+        <select name="filter">
+            <option value="">All symbols</option>
+            <option value="new_close_highs">New intraday Highs</option>
+        </select>
+        <input type = "submit" />
+    </form>
+</div>
+
+
+<table class="ui selectable celled table"> 
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Market</th>
+            <th scope="col">Exchange</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for symbol in symbols %}
+        <tr> 
+            <td><a href="/asset/{{ symbol['id'] }}">{{ symbol['assetname'] }}</a></td>
+            <td>{{ symbol['marketname'] }}</td>
+            <td>{{ symbol['exchange'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>    
+</table>        
+{% endblock content %}
+
+

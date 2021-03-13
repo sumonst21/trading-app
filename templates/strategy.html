@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1><a href='/'>Strategy</a> 
+    <i class="arrow circle right icon"></i>
+    {{ strategy_name }}
+</h1>
+
+<table class="ui celled table">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Daily Bias</th>
+        <th>Entry Point</th>
+        <th>Stop Loss</th>
+        <th>Take Profit</th>    
+        <th>Date</th>     
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for strategy in strategies %}      
+        <tr>
+            <td>{{ strategy.name }}</td>
+            <td>{{ strategy.strategy_bias}}</td>
+            <td>{{ strategy.entry_point}}</td>
+            <td>{{ strategy.stop_loss}}</td>
+            <td>{{ strategy.take_profit}}</td>      
+            <td>{{ strategy.date}}</td>             
+            <td class="warning">{{ strategy.status}}</td>            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}

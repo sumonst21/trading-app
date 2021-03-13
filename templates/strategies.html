@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>List of Strategies </h1>
+
+<table class="ui selectable celled table"> 
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for strategy in strategies %}
+        <tr> 
+            <td>{{ strategy['id'] }}</td>
+            <td><a href="/strategy/{{ strategy['id'] }}">{{ strategy['name'] }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>    
+</table>        
+{% endblock content %}
+
+

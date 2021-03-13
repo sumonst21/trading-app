@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1><a href='/'>Symbol</a> 
+    <i class="arrow circle right icon"></i>
+    {{ symbolname }}
+</h1>
+<!-- TradingView Widget BEGIN -->
+<div>
+    <div class="tradingview-widget-container">
+        <div id="tradingview_6ea08"></div>
+        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/AUDUSD/?exchange=FX" rel="noopener" target="_blank"><span class="blue-text"></span></a></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+        <script type="text/javascript">
+            new TradingView.widget(
+            {
+            "width": "100%",
+            "height": 610,
+            "symbol": "FX:{{ symbolname }}",
+            "timezone": "Australia/Sydney",
+            "theme": "dark",
+            "hide_side_toolbar": false,
+            "interval": "60",
+            "withdateranges": true,
+            "style": "1",
+            "locale": "en",
+            "toolbar_bg": "#f1f3f6",
+            "enable_publishing": false,
+            "allow_symbol_change": true,
+            "studies": [
+            "MAExp@tv-basicstudies"
+          ],
+            "container_id": "tradingview_6ea08"
+        }   
+        );
+        </script>
+    </div>
+</div>
+
+<!-- Apply strategy -->
+<div>   
+    <form method="post" action="/apply_strategy">
+        <select name="strategy_id">
+            <option value="">All strategies</option>
+            {% for strategy in strategies: %}
+            <option value="{{ strategy.id }}">{{ strategy.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="strategy_bias">
+            <option value="">Select daily bias</option>
+            <option value="Long">Long</option>
+            <option value="Short">Short</option>            
+        </select>
+        <input type="hidden" name="symbolid" value="{{ symbolid }}"/>
+        <input type = "submit" value = "Apply Strategy"  />
+    </form>
+</div>
+
+<table class="ui selectable celled table"> 
+    <thead>
+        <tr>
+            <th scope="col">date</th>
+            <th scope="col">timeframe</th>
+            <th scope="col">Open</th>
+            <th scope="col">High</th>
+            <th scope="col">Low</th>
+            <th scope="col">Close</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for price in prices %}
+        <tr>    
+          <td>{{ price.date }}</td>
+          <td>{{ price.timeframe }}</td>
+          <td>{{ price.bidopen }}</td>
+          <td>{{ price.bidhigh }}</td>
+          <td>{{ price.bidlow }}</td>                    
+          <td>{{ price.bidclose }}</td>
+        </tr>   
+        {% endfor %}
+    </tbody>
+</table>    
+{% endblock content %}
+
