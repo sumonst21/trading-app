@@ -36,8 +36,8 @@ Installation
 --------------
 - Configuration Steps:
       
-      Configure file fxcm.cfg with your credentials
-      Configure file dabase.ini with database informations
+      configure file fxcm.cfg with your FXCM credentials 
+      configure file database.ini with database informations
 
 - Installation steps:
 
