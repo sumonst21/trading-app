@@ -5,8 +5,8 @@ Trading import app is designed to import market datas across a wide range of exc
 Exchanges:
 ---------
 - FXCMAPI
-- OANDAAPI
-- ALPACAAPI
+- OANDAAPI (in development)
+- ALPACAAPI (in development)
 
 Technologies:
 ---------
@@ -34,6 +34,10 @@ List of filter available for market analysis
 
 Installation
 --------------
+- Configuration Steps:
+      
+      Configure file fxcm.cfg with your credentials
+      Configure file dabase.ini with database informations
 
 - Installation steps:
 
