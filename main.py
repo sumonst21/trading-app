@@ -164,7 +164,8 @@ def strategy(request: Request, strategy_id):
             instruments t2
         WHERE
             t1.symbol_id = t2.id and 
-            t1.strategy_id = %s
+            t1.strategy_id = %s and
+            t1.status in ('new', 'trading')
         ORDER by
             t1.status
     """, (strategy_id,))

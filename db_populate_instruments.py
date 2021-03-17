@@ -3,7 +3,7 @@ import psycopg2
 import psycopg2.extras
 from config import configdb
 from mlsc_utilities import fxcm_connect, db_connect
-from mlsc_strategies import ScanForStrategy
+
 
 # Connection to postgresql 
 conn = db_connect()   
@@ -30,8 +30,8 @@ for asset in assets:
                 print ("Oops! An exception has occured:", error)
                 print ("Exception TYPE:", type(error)) 
 
+conn.commit()
 conn.close()
 api.close()
 
-# check for strategy triggers
-ScanForStrategy()
+

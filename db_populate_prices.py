@@ -47,10 +47,8 @@ def DataframeToSql(dataframe):
         print ("Exception TYPE:", type(error))   
 
 # Connection to postgresql
-print('db-db_populate_prices')
 conn = db_connect() 
 cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
-
 
 ## get instruments list
 cur.execute("""
@@ -59,15 +57,14 @@ SELECT id, name FROM instruments WHERE market_id in (2,3,4) ORDER BY name
 instruments = cur.fetchall()
 
 # FXCMapi connection
-print('api-db_populate_pricecs.py')
 api = fxcm_connect()
 
 # main program
 previous_day = dt.datetime.today() - dt.timedelta(days=1)
 now = dt.datetime.now()
 current_hour = now.strftime("%H")
-bars = 3
-timeframes = ['D1', 'H1']
+bars = 30
+timeframes = ['H1']
 
 #instruments = [(1, 'AUD/CAD')]
 
@@ -77,13 +74,18 @@ for instrument in instruments:
     symbol_id, symbol_name = instrument 
     
     for timeframe in timeframes:
-
-        historical_data = api.get_candles(symbol_name, period=timeframe, number=bars)
-        while historical_data.empty:
-            api.close()
-            print('api-historical_data')
-            api = fxcm_connect()
+        
+        try:
             historical_data = api.get_candles(symbol_name, period=timeframe, number=bars)
+        except:
+            print('historicaldataerror', historical_data)
+            
+            while historical_data is None:
+                print('historical_data is None', historical_data)
+                api.close()
+                api = fxcm_connect()
+                historical_data = api.get_candles(symbol_name, period=timeframe, number=bars)
+
         historical_data = historical_data.drop(historical_data.index[-1]) # drop current candle 
         historical_data['symbolid'] = symbol_id 
         historical_data['timeframe'] = timeframe
@@ -95,13 +97,16 @@ for instrument in instruments:
         try:
             DataframeToSql(historical_data)
         except Exception as error:
-            print ("Oops! An exception has occured: dataframtosql", error)
+            print ("Oops! An exception has occured: dataframetosql", error)
             print ("Exception TYPE:", type(error))  
 
+        historical_data = None
+        
 conn.commit()
-conn.close()
 api.close()
 
 # call strategy scanner
 ScanForStrategies() 
+#UpdateNewTrade() - call from another file
 
+conn.close()

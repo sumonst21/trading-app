@@ -74,8 +74,9 @@ try:
         date TIMESTAMPTZ NOT NULL,
         entry_point NUMERIC,
         stop_loss NUMERIC,
-        take_profit NUMERIC,
-        status TEXT NOT NULL      
+        take_profit NUMERIC,        
+        status TEXT NOT NULL,
+        trade_id INT 
     )
     """)   
 
