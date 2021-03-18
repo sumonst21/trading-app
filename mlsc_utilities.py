@@ -4,28 +4,17 @@ import psycopg2.extras
 from config import configdb
 import fxcmpy
 import time
-
-
+import sys
 
 # FXCMapi connection
 def fxcm_connect():
-    api = fxcm_handler()
-    while not api:
-        print('api:', api)
-        del api
-        print('fxcm reconnecting in 45 seconds')
-        time.sleep(45)
-        api = fxcm_handler()
-    return api
-
-def fxcm_handler():
     try:
         api = fxcmpy.fxcmpy(config_file='fxcm.cfg')
+        print('api', api)
         return api
     except Exception as error:
-        print ("Oops! An exception has occured: fxcm_connect()", error)
-        print ("Exception TYPE:", type(error))  
-
+        print ("Error connecting to fxcm API")  
+        sys.exit()
 
 # Connection to postgresql
 def db_connect():

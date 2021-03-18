@@ -1,0 +1,21 @@
+{
+
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run File",
+            "command": "python ${file}",
+            "type": "shell",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "focus": true
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

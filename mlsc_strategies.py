@@ -266,12 +266,16 @@ def check_for_alert_bo1h(symbol_id):
     if daily_bias == 'Long':
         if close_previous_h1 > high_previous_day:
             message.append(f'{symbol_name} - Long with trend | Previous day high: {high_previous_day} | Previous Close H1: {close_previous_h1} | Previous Low H1: {low_previous_h1}')   
-            OpenBuyPosition((symbol_name, low_previous_h1, close_previous_h1))
+            response = OpenBuyPosition((symbol_name, low_previous_h1, close_previous_h1))
+            print(response)
+            print(response['status'])
+            #if response['status']:
     elif daily_bias == 'Short':
         if close_previous_h1 < low_previous_day:
             message.append(f'{symbol_name} - Short with trend | Previous day Low: {low_previous_day} | Previous Close H1: {close_previous_h1} | Previous High H1: {high_previous_h1}')
-            print(OpenSellPosition((symbol_name, high_previous_h1, close_previous_h1)))
-
+            response = OpenSellPosition((symbol_name, high_previous_h1, close_previous_h1))
+            print(response)
+            print(response['status'])            
     if message:
         SendEmailTo(message)
     
