@@ -66,7 +66,9 @@ def SendEmailTo(message):
         server.sendmail(paramsEmail['email_address'], paramsEmail['email_address'], email_message)
 
 # Risk Management
-def size_position(self, price, stop, risk, method=0, exchange_rate=None, JPY_pair=False):
+def size_position(price, stop, risk, method=0, exchange_rate=None, JPY_pair=False):
+    # size_position(0.77520, 0.77400, risk=2, method=1, JPY_pair = False)
+
     #    '''
     #    Helper function to calcuate the position size given a known amount of risk.
     # 
@@ -85,84 +87,180 @@ def size_position(self, price, stop, risk, method=0, exchange_rate=None, JPY_pai
     #    - exchange_rate: Float, is the exchange rate between the account currency
     #    and the counter currency. Required for method 2.
     #    '''
- 
+
     if JPY_pair == True: #check if a YEN cross and change the multiplier
         multiplier = 0.01
+        divisor = 100
     else:
         multiplier = 0.0001
- 
+        divisor = 10000
     #Calc how much to risk
     acc_value = 1000 #self.broker.getvalue()
-    cash_risk = acc_value * risk
+    cash_risk = acc_value * (risk/100)
     stop_pips_int = abs((price - stop) / multiplier)
     pip_value = cash_risk / stop_pips_int
- 
+    pip_value_std = (multiplier/price) * divisor
+
+    
+    print('price', price)
+    print('stop', stop )
+    print('method', method)
+    print('exchange_rate', exchange_rate)
+    print('stop_pips_int', stop_pips_int)
+    print('pip_value', pip_value)
+    print('pip_value_std', pip_value_std)
+
     if method == 1:
         #pip_value = pip_value * price
-        units = pip_value / multiplier
-        return units
+        units = (pip_value * divisor) / pip_value_std
+        units_fxcm = units / 1000
+        return units_fxcm
  
     elif method == 2:
         pip_value = pip_value * exchange_rate
         units = pip_value / multiplier
-        return units
+        units_fxcm = units / 1000
+        return units_fxcm
  
     else: # is method 0
-        units = pip_value / multiplier
-        return units
+        units = (pip_value * divisor) / pip_value_std
+        units_fxcm = units / 1000
+        return units_fxcm
 
 # Trading Functions
 def OpenBuyPosition(params):
 
     # api connection
-    print('api-Openbuyposition')
-    api = fxcm_connect()
-    symbol_name, stop_loss, close_previous_h1 = params
-    close_previous_h1 = float(close_previous_h1)
-   
-    
-    # set stop_loss, and take_profit 
-    if 'JPY' in symbol_name:
-        stop = fsum([stop_loss, -0.010])
-        pips = (close_previous_h1 - stop) 
-        take_profit = (round(pips,3) * 2) + close_previous_h1
-    else:
-        stop = fsum([stop_loss, -0.00010])
-        pips = (close_previous_h1 - stop) 
-        take_profit = (round(pips,5) * 2) + close_previous_h1
- 
-    # set amount
-    amount = 10
+    try:
+        api = fxcm_connect()
+        symbol_name, stop_loss, close_previous_h1 = params
+        close_previous_h1 = float(close_previous_h1)
+        risk = 2
+        JPY_pair = False
 
-    #open order
-    api.open_trade(symbol_name, is_buy=True, amount=amount, time_in_force='IOC', limit = take_profit, order_type='AtMarket', is_in_pips=False, stop=stop)
-    api.close()
+        # set stop_loss, and take_profit 
+        if 'JPY' in symbol_name:
+            stop = fsum([stop_loss, -0.010])
+            pips = (close_previous_h1 - stop) 
+            take_profit = (round(pips,3) * 2) + close_previous_h1
+            JPY_pair = True
+        else:
+            stop = fsum([stop_loss, -0.00010])
+            pips = (close_previous_h1 - stop) 
+            take_profit = (round(pips,5) * 2) + close_previous_h1
+    
+        # set method for position size
+        if 'EUR/AUD' in symbol_name:
+            method = 0
+        elif 'AUD' in symbol_name: 
+            method = 1
+        else:
+            method = 2
+            symbol_exchage = 'AUD' + symbol_name[3:]
+        
+            cur.execute("""
+                SELECT 
+                    bidclose
+                FROM
+                    prices_fxcm_api t1,
+                    instruments t2
+                WHERE
+                    t1.symbolid=t2.id and
+                    t2.name = %s and
+                    date = (
+                            SELECT 
+                                max(date) max_date
+                            FROM
+                                prices_fxcm_api t1,
+                                instruments t2
+                            WHERE
+                                t1.symbolid=t2.id and
+                                t2.name = %s and
+                            t1.timeframe = 'H1'
+                        )
+            """, (symbol_exchage, symbol_exchage, ))
+
+            exchange_rate = cur.fetchone()
+            print('exchange_rate', exchange_rate)
+            rate = exchange_rate['bidclose']
+            rate = float(rate)
+    
+        # set position size
+        size = size_position(price=close_previous_h1, stop=stop, risk=risk, method=method, exchange_rate=rate, JPY_pair=JPY_pair)
+        print('size', size, symbol_name)
+
+        #open order
+        api.open_trade(symbol_name, is_buy=True, amount=size, time_in_force='IOC', limit = take_profit, order_type='AtMarket', is_in_pips=False, stop=stop)
+        api.close()
+    except:
+        print('OpenBuyOrder Error',)
 
 def OpenSellPosition(params):
 
     # api connection
-    print('api-Opensellposition')
-    api = fxcm_connect()
-    symbol_name, stop_loss, close_previous_h1 = params
-    close_previous_h1 = float(close_previous_h1)
-    # check any open trade for symbol_name
-    
-    # add extra pips stop_loss
-    if 'JPY' in symbol_name:
-        stop = fsum([stop_loss, 0.010])
-        pips = (stop - close_previous_h1) 
-        take_profit = close_previous_h1 - (round(pips,3) * 2)
-    else:
-        stop = fsum([stop_loss, 0.00010])
-        pips = (stop - close_previous_h1) 
-        take_profit = close_previous_h1 - (round(pips,5) * 2)   
-    
-    # set amount
-    amount = 10
+    try:
+        api = fxcm_connect()
+        symbol_name, stop_loss, close_previous_h1 = params
+        close_previous_h1 = float(close_previous_h1)
+        risk = 2
+        rate = 0
+        JPY_pair = False    
+        
+        # add extra pips stop_loss
+        if 'JPY' in symbol_name:
+            stop = fsum([stop_loss, 0.010])
+            pips = (stop - close_previous_h1) 
+            take_profit = close_previous_h1 - (round(pips,3) * 2)
+            JPY_pair = True
+        else:
+            stop = fsum([stop_loss, 0.00010])
+            pips = (stop - close_previous_h1) 
+            take_profit = close_previous_h1 - (round(pips,5) * 2)   
+        
+        # set method for position size
+        if 'USD' in symbol_name[-3:]:
+            method = 0
+        elif 'USD' in symbol_name[:3]:
+            method = 1
+        else:
+            method = 2
+            symbol_exchage = 'USD' + symbol_name[3:]
+            cur.execute("""
+                SELECT 
+                    bidclose
+                FROM
+                    prices_fxcm_api t1,
+                    instruments t2
+                WHERE
+                    t1.symbolid=t2.id and
+                    t2.name = %s and
+                    date = (
+                            SELECT 
+                                max(date) max_date
+                            FROM
+                                prices_fxcm_api t1,
+                                instruments t2
+                            WHERE
+                                t1.symbolid=t2.id and
+                                t2.name = %s and
+                            t1.timeframe = 'H1'
+                        )
+            """, (symbol_exchage, symbol_exchage, ))
 
-    #open order
-    api.open_trade(symbol_name, is_buy=False, amount=amount, time_in_force='IOC', limit = take_profit, order_type='AtMarket', is_in_pips=False, stop=stop)         
-    api.close()    
+            exchange_rate = cur.fetchone()
+            print('exchange_rate', exchange_rate)
+            rate = exchange_rate['bidclose']
+            rate = float(rate)
+
+        # set position size
+        size = size_position(price=close_previous_h1, stop=stop, risk=risk, method=method, exchange_rate=rate, JPY_pair=JPY_pair)
+        print('size', size, symbol_name)
+
+        #open order
+        api.open_trade(symbol_name, is_buy=False, amount=size, time_in_force='IOC', limit = take_profit, order_type='AtMarket', is_in_pips=False, stop=stop)         
+        api.close()    
+    except:
+        print('OpenSellOrder error', params)
 
 def UpdateNewTrade():
     
@@ -213,7 +311,7 @@ def UpdateNewTrade():
             cur.execute(sql_update_query, (entry, stop, take_profit, status, tradeId, symbol_id ))
             conn.commit()
 
-            print('It worked')
+            print('Trade updated successfully')
     api.close()
 
 # Strategies
@@ -264,18 +362,18 @@ def check_for_alert_bo1h(symbol_id):
 
     # main logic       
     if daily_bias == 'Long':
+
         if close_previous_h1 > high_previous_day:
             message.append(f'{symbol_name} - Long with trend | Previous day high: {high_previous_day} | Previous Close H1: {close_previous_h1} | Previous Low H1: {low_previous_h1}')   
+            print(f'{symbol_name} - Long with trend | Previous day high: {high_previous_day} | Previous Close H1: {close_previous_h1} | Previous Low H1: {low_previous_h1}')   
+            print('symbol_name', symbol_name)
             response = OpenBuyPosition((symbol_name, low_previous_h1, close_previous_h1))
-            print(response)
-            print(response['status'])
-            #if response['status']:
     elif daily_bias == 'Short':
         if close_previous_h1 < low_previous_day:
             message.append(f'{symbol_name} - Short with trend | Previous day Low: {low_previous_day} | Previous Close H1: {close_previous_h1} | Previous High H1: {high_previous_h1}')
+            print(f'{symbol_name} - Short with trend | Previous day Low: {low_previous_day} | Previous Close H1: {close_previous_h1} | Previous High H1: {high_previous_h1}')
+            print('symbol_name', symbol_name)
             response = OpenSellPosition((symbol_name, high_previous_h1, close_previous_h1))
-            print(response)
-            print(response['status'])            
     if message:
         SendEmailTo(message)
     

@@ -14,7 +14,6 @@ def fxcm_connect():
         return api
     except Exception as error:
         print ("Error connecting to fxcm API")  
-        sys.exit()
 
 # Connection to postgresql
 def db_connect():
