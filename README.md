@@ -1,8 +1,7 @@
-# trading-import-app
+# fxmc-trading-app
 
-Trading import app is designed to import market datas across a wide range of exchanges API available and to create market strategies in order to send automated notifications.
 
-Exchanges:
+Exchanges Available:
 ---------
 - FXCMAPI
 - OANDAAPI (in development)
@@ -17,7 +16,6 @@ Technologies:
 - Semantic UI
 - Jinja2
 
-
 Features:
 ---------
 - Import list of market instruments FOREX, INDEX, COMMODITIES and STOCKS.
@@ -25,6 +23,7 @@ Features:
 - Trading view Widget integration
 - Breakout Strategy
 - Email notifications
+- Position size calculation
 
 Filter:
 -------
