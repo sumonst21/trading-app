@@ -10,7 +10,6 @@ Exchanges Available:
 Technologies:
 ---------
 - Python 3.8
-- fxcmpy
 - PostgreSQL
 - FastAPI
 - Semantic UI
