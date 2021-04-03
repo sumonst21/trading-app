@@ -13,11 +13,19 @@ try:
         name TEXT NOT NULL PRIMARY KEY
     ) 
     """)
+
     markets = ['New', 'Forex Major', 'Forex Minor', ' Forex Exotic', 'Index', 'Commodity', 'Crypto', 'Forex Basket' ]
     for market in markets:
+        # check if item exists
         cur.execute("""
-            INSERT INTO markets(name) VALUES (%s)
-        """, (market,))        
+            SELECT id FROM markets WHERE name = %s
+        """, (market,))
+        rows = cur.fetchall()
+        # insert market item
+        if not rows:
+            cur.execute("""
+                INSERT INTO markets(name) VALUES (%s)
+            """, (market,))        
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS instruments
@@ -25,7 +33,7 @@ try:
         id SERIAL UNIQUE, 
         name TEXT NOT NULL PRIMARY KEY,
         market_id INT REFERENCES markets(id),
-        exchange TEXT NOT NULL
+        exchange_id INT NOT NULL REFERENCES exchanges(id)
     ) 
     """)
 
@@ -78,7 +86,24 @@ try:
         status TEXT NOT NULL,
         trade_id INT 
     )
+    """)
+
+    # exchanges 
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS exchanges
+    (
+        id serial NOT NULL PRIMARY KEY,
+        exchange TEXT NOT NULL
+    )
     """)   
+
+    exchanges = ['fxcm', 'interactive-brokers', ]
+    for exchange in exchanges:
+        cur.execute("""
+            INSERT INTO exchanges(exchange) VALUES (%s)
+        """, (exchange,))
+ 
 
     conn.commit()
     conn.close()

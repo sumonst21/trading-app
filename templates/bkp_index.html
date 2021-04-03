@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>List of Symbols </h1>
+
+<div class="ui container">
+    <form method="get">
+        <select name="filter">
+            <option value="">All symbols</option>
+            <option value="candle_sequence">Five-bars Candle Colour</option>
+        </select>
+        <input type = "submit" />
+    </form>
+</div>
+
+
+<table class="ui selectable celled table"> 
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Market</th>
+            <th scope="col">Exchange</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for symbol in symbols %}
+        
+        <tr> 
+            <td><a href="/asset/{{ symbol[1] }}">{{ symbol[0] }}</a></td>
+            <td>{{ symbol[2] }}</td>
+            <td>{{ symbol[3] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>    
+</table>        
+{% endblock content %}
+
+

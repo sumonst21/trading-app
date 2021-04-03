@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="ui three column centered grid">
+    <div class="column">
+        <form class="ui form" method="post" action="/create_instrument"> 
+            <h1 class="ui dividing header">New Instrument</h1>
+                <div class="field">
+                    <label>Code</label>
+                    <div class="field">
+                        <input type="text" name="symbol" placeholder="Insert instrument code EUR/USD, AUD/USD, HK50...">
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Market</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="market_id">
+                            <div class="default text">Type</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                            {% for market in markets %}
+                                <div class="item" data-value="{{ market['id'] }}">
+                                    {{ market['name'] }}
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Exchange</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="exchange_id">
+                            <div class="default text">Type</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                            {% for exchange in exchanges%}
+                                <div class="item" data-value="{{ exchange['id'] }}">
+                                    {{ exchange['exchange'] }}
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Description</label>
+                    <textarea></textarea>
+                  </div>
+                  
+            
+            <input class="ui button green" type = "submit" value = "Create"  />
+            
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

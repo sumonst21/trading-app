@@ -117,8 +117,8 @@ def size_position(price, stop, risk, method=0, exchange_rate=None, JPY_pair=Fals
         return units_fxcm
  
     elif method == 2:
-        pip_value = pip_value * exchange_rate
-        units = pip_value / multiplier
+        #pip_value = pip_value * exchange_rate
+        units = (pip_value * divisor) / pip_value_std
         units_fxcm = units / 1000
         return units_fxcm
  
@@ -205,7 +205,7 @@ def OpenSellPosition(params):
         risk = 2
         rate = 0
         JPY_pair = False    
-        
+ 
         # add extra pips stop_loss
         if 'JPY' in symbol_name:
             stop = fsum([stop_loss, 0.010])
@@ -216,7 +216,7 @@ def OpenSellPosition(params):
             stop = fsum([stop_loss, 0.00010])
             pips = (stop - close_previous_h1) 
             take_profit = close_previous_h1 - (round(pips,5) * 2)   
-        
+        print('symbol_name', symbol_name)
         # set method for position size
         if 'USD' in symbol_name[-3:]:
             method = 0
@@ -225,6 +225,13 @@ def OpenSellPosition(params):
         else:
             method = 2
             symbol_exchage = 'USD' + symbol_name[3:]
+            isValid = GetSymbolId(symbol_exchage)
+
+            if not isValid:
+                symbol_exchage = symbol_name[-3:] + '/USD'
+            
+
+            print('symbol_exchage', symbol_exchage)
             cur.execute("""
                 SELECT 
                     bidclose
@@ -251,7 +258,7 @@ def OpenSellPosition(params):
             print('exchange_rate', exchange_rate)
             rate = exchange_rate['bidclose']
             rate = float(rate)
-
+ 
         # set position size
         size = size_position(price=close_previous_h1, stop=stop, risk=risk, method=method, exchange_rate=rate, JPY_pair=JPY_pair)
         print('size', size, symbol_name)
@@ -259,8 +266,8 @@ def OpenSellPosition(params):
         #open order
         api.open_trade(symbol_name, is_buy=False, amount=size, time_in_force='IOC', limit = take_profit, order_type='AtMarket', is_in_pips=False, stop=stop)         
         api.close()    
-    except:
-        print('OpenSellOrder error', params)
+    except Exception as error:
+        print('OpenSellOrder error', params, 'error:', error, symbol_name, size, take_profit, stop)
 
 def UpdateNewTrade():
     
@@ -368,12 +375,14 @@ def check_for_alert_bo1h(symbol_id):
             print(f'{symbol_name} - Long with trend | Previous day high: {high_previous_day} | Previous Close H1: {close_previous_h1} | Previous Low H1: {low_previous_h1}')   
             print('symbol_name', symbol_name)
             response = OpenBuyPosition((symbol_name, low_previous_h1, close_previous_h1))
+            UpdateNewTrade() # incluir condicional
     elif daily_bias == 'Short':
         if close_previous_h1 < low_previous_day:
             message.append(f'{symbol_name} - Short with trend | Previous day Low: {low_previous_day} | Previous Close H1: {close_previous_h1} | Previous High H1: {high_previous_h1}')
             print(f'{symbol_name} - Short with trend | Previous day Low: {low_previous_day} | Previous Close H1: {close_previous_h1} | Previous High H1: {high_previous_h1}')
             print('symbol_name', symbol_name)
             response = OpenSellPosition((symbol_name, high_previous_h1, close_previous_h1))
+            UpdateNewTrade() # incluir condicional
     if message:
         SendEmailTo(message)
     

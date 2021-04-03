@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>FXMC - Login</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.css"/>
+    <style type="text/css">
+      body{
+      background-color: #32393d;
+      }
+      section{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      }
+      form{
+      width: 40%;
+      background-color: #ecf0f1;
+      padding: 25px;
+      }
+      @media(max-width: 692px){
+      form{
+      width: 70%;
+      }
+      }
+      @media(max-width: 450px){
+      form{
+      width: 80%;
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <form class="ui form">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" placeholder="Username" required>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" placeholder="Password" required>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox">
+            <label>Remember Me</label>
+          </div>
+        </div>
+        <button class="ui inverted secondary button" type="submit">Submit</button>
+      </form>
+    </section>
+  </body>
+</html>

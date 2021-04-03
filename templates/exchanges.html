@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="ui two column centered grid">
+    <div class="column">
+        <table class="ui red celled striped table"> 
+            <thead>
+                <tr>
+                    <th colspan="2">
+                        <div class="ui grid">
+                            <div class="four column row">
+                                <div class="left floated column">
+                                <h1>Exchanges</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+
+                </tr>
+
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exchange in exchanges %}
+                <tr> 
+                    <td>{{ exchange['id'] }}</td>
+                    <td>{{ exchange['exchange'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>    
+        </table>       
+        <p>* if you need a new exchange sent us an email to <b>contact@costamurillo.com</b> </p>
+    </div>
+</div>
+{% endblock content %}
+

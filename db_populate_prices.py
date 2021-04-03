@@ -3,7 +3,7 @@ import psycopg2.extras
 import datetime as dt
 import pytz
 from mlsc_utilities import db_connect, fxcm_connect
-from mlsc_strategies import ScanForStrategies, UpdateNewTrade
+from mlsc_strategies import ScanForStrategies
 
 def Isprocessed(params):
     try:
@@ -56,8 +56,11 @@ today = dt.datetime.today()
 previous_day = today - dt.timedelta(days=1)
 now = dt.datetime.now()
 current_hour = now.strftime("%H") 
-timeframes = ['D1', 'H1']
-bars = 30
+timeframes = ['D1','H1']
+bars = 5
+
+# 67 daily, 1355 hourly
+
 
 for timeframe in timeframes:
 
@@ -125,7 +128,6 @@ for timeframe in timeframes:
 
             # call strategy scanner
             ScanForStrategies() 
-            UpdateNewTrade()     
         except:
             print('failed to connect API')
     else:

@@ -1,24 +1,28 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1><a href='/'>Strategy</a> 
-    <i class="arrow circle right icon"></i>
-    {{ strategy_name }}
-</h1>
 
-<table class="ui celled table">
-    <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Daily Bias</th>
-        <th>Entry Point</th>
-        <th>Stop Loss</th>
-        <th>Take Profit</th>    
-        <th>Date</th>     
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
+<div class="ui two column centered grid">
+  <div class="column">
+    <table class="ui purple celled table"> 
+      <thead>
+          <tr>
+            <th colspan="8">
+              <h1>Strategy:  {{ strategy_name }} </h1>
+            </th>
+          </tr>
+          <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Bias</th>
+              <th scope="col">Entry Point</th>
+              <th scope="col">Stop Loss</th>
+              <th scope="col">Take Profit</th>
+              <th scope="col">Date</th>
+              <th scope="col">Status</th>
+              <th scope="col">#</th>
+            </tr>
+      </thead>
+      <tbody>
         {% for strategy in strategies %}      
         <tr>
             <td>{{ strategy.name }}</td>
@@ -27,9 +31,26 @@
             <td>{{ strategy.stop_loss}}</td>
             <td>{{ strategy.take_profit}}</td>      
             <td>{{ strategy.date}}</td>             
-            <td class="warning">{{ strategy.status}}</td>            
+            <td class="warning">{{ strategy.status}}</td>         
+            <td>
+              <form method="post" action="/delete_instrument/{{strategy.id}}">
+                <div class="ui icon buttons">
+                  <button class="ui button" type="submit">
+                     <input type="hidden" name="trading_id" value="{{ strategy.id }}"/>
+                     <i class="trash icon purple"></i>
+                     
+                  </button>
+                </div>
+              </form>
+            </td>      
+
         </tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>  
+  </table>  
+  </div>
+</div>
 {% endblock content %}
+
+
+

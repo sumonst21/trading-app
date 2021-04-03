@@ -1,37 +1,249 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>List of Symbols </h1>
 
-<div class="ui container">
-    <form method="get">
-        <select name="filter">
-            <option value="">All symbols</option>
-            <option value="new_close_highs">New intraday Highs</option>
-        </select>
-        <input type = "submit" />
-    </form>
+
+<div class="ui grid">
+  <div class="sixteen wide column">
+    <!-- TradingView Widget BEGIN -->
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+      {
+      "symbols": [
+        {
+          "proName": "FOREXCOM:SPXUSD",
+          "title": "S&P 500"
+        },
+        {
+          "proName": "FOREXCOM:NSXUSD",
+          "title": "Nasdaq 100"
+        },
+        {
+          "proName": "FX_IDC:EURUSD",
+          "title": "EUR/USD"
+        },
+        {
+          "proName": "BITSTAMP:BTCUSD",
+          "title": "BTC/USD"
+        },
+        {
+          "proName": "BITSTAMP:ETHUSD",
+          "title": "ETH/USD"
+        }
+      ],
+      "colorTheme": "dark",
+      "isTransparent": false,
+      "showSymbolLogo": true,
+      "locale": "en"
+    }
+      </script>
+    </div>
+    <!-- TradingView Widget END -->
+  </div>  
+</div>
+
+<div class="ui grid">
+  <div class="ten wide column">
+    <!-- TradingView Widget BEGIN -->
+    <div class="tradingview-widget-container">
+      <div id="tradingview_f9acb"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+      <script type="text/javascript">
+      new TradingView.widget(
+      {
+      "width": 980,
+      "height": 510 ,
+      "symbol": "INDEX:DXY",
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "light",
+      "style": "2",
+      "locale": "en",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "hide_top_toolbar": true,
+      "save_image": false,
+      "container_id": "tradingview_f9acb"
+    }
+      );
+      </script>
+    </div>
+    <!-- TradingView Widget END -->
+  </div>
+  <div class="six wide column">
+    <!-- TradingView Widget BEGIN -->
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+      {
+      "colorTheme": "light",
+      "isTransparent": false,
+      "width": "510",
+      "height": "510",
+      "locale": "en",
+      "importanceFilter": "-1,0,1"
+    }
+      </script>
+    </div>
+    <!-- TradingView Widget END -->
+  </div>
 </div>
 
 
-<table class="ui selectable celled table"> 
-    <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Market</th>
-            <th scope="col">Exchange</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for symbol in symbols %}
-        <tr> 
-            <td><a href="/asset/{{ symbol['id'] }}">{{ symbol['assetname'] }}</a></td>
-            <td>{{ symbol['marketname'] }}</td>
-            <td>{{ symbol['exchange'] }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>    
-</table>        
-{% endblock content %}
+<div class="ui grid stackable padded">
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="ui right floated header red">
+            <i class="icon briefcase"></i>
+          </div>
+          <div class="header">
+            <div class="ui red header">
+              {{ exchanges }}
+            </div>
+          </div>
+          <div class="meta">
+            Exchanges
+          </div>
+          <div class="description">
+            Contact administrator to add new exchanges
+          </div>
+        </div>
+        <div class="extra content">
+          <a href="/exchanges">
+            <div class="ui two buttons">
+              <div class="ui red button">More Info</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="ui right floated header green">
+            <i class="icon list"></i>
+          </div>
+          <div class="header">
+            <div class="ui header green">{{ instruments }}</div>
+          </div>
+          <div class="meta">
+            Instruments
+          </div>
+          <div class="description">
+            Add new nstrtrument manually or API
+          </div>
+        </div>
+        <div class="extra content">
+          <a href="/instruments/p/1">
+            <div class="ui two buttons">
+              <div class="ui green button">More Info</div>
+            </div>
+          </a>  
+        </div>
+      </div>
+    </div>
+    <div class="four wide computer eight wide tablet sixteen wide mobile column">
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="ui right floated header teal">
+            <i class="icon life ring"></i>
+          </div>
+          <div class="header">
+            <div class="ui teal header">{{ strategies }}</div>
+          </div>
+          <div class="meta">
+            Strategies
+          </div>
+          <div class="description">
+            Contact administrator to add new strategies
+          </div>
+        </div>
+        <div class="extra content">
+          <a href="/strategies">
+            <div class="ui two buttons">
+              <div class="ui teal button">More Info</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="four wide computer eight wide tablet sixteen wide mobile column"
+    >
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="ui right floated header purple">
+            <i class="icon trophy"></i>
+          </div>
+          <div class="header">
+            <div class="ui purple header">{{ trades }}</div>
+          </div>
+          <div class="meta">
+            Trades
+          </div>
+          <div class="description">
+            Select a new pair to start trading
+          </div>
+        </div>
+        <div class="extra content">
+          <a href="/strategy/1">
+            <div class="ui two buttons">
+              <div class="ui purple button">More Info</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+</div>
+  
+<div class="ui grid stackable padded">
+    <div class="four wide computer eight wide tablet sixteen wide mobile  center aligned column">
+      <div class="ui teal statistic">
+        <div class="value">
+          50+
+        </div>
+        <div class="label">
+          D1
+        </div>
+      </div>
+    </div>
+    <div
+      class="four wide computer eight wide tablet sixteen wide mobile  center aligned column"
+    >
+      <div class="ui purple statistic">
+        <div class="value">
+          200+
+        </div>
+        <div class="label">
+          H4
+        </div>
+      </div>
+    </div>
+    <div
+      class="four wide computer eight wide tablet sixteen wide mobile  center aligned column"
+    >
+      <div class="ui red statistic">
+        <div class="value">
+          800+
+        </div>
+        <div class="label">
+          H1
+        </div>
+      </div>
+    </div>
+    <div
+      class="four wide computer eight wide tablet sixteen wide mobile  center aligned column"
+    >
+      <div class="ui green statistic">
+        <div class="value">
+          1000+
+        </div>
+        <div class="label">
+          m5  
+        </div>
+      </div>
+    </div>
+</div>
 
-
+ {% endblock content %}
