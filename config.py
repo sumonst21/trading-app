@@ -4,11 +4,11 @@ from configparser import ConfigParser
 def configemail():
 
     EMAIL_SETTINGS = {
-        'email_address': 'murillocostafx@gmail.com',
-        'email_password': 'Hfr098cc*',
+        'email_address': ''
+        'email_password': '',
         'email_host': 'smtp.gmail.com',
         'email_port': 465,
-        'email_to': 'costamurillo88@gmail.com'
+        'email_to': ''
     }
 
     return EMAIL_SETTINGS
