@@ -1,6 +1,22 @@
 # fxmc-trading-app
 
 
+Configuration:
+---------
+
+- Configuration steps:
+
+      configure file fxcm.cfg with your FXCM credentials (you need to creare a FXCM account to get api credentials)
+      configure file database.ini with your postgresql database, username, and password. 
+
+- Installation steps:
+      
+      pip install -r requirements.txt
+      py db_create.py
+      py db_populate_instruments.py
+      py db_populate_prices.py 
+      
+      
 Exchanges Available:
 ---------
 - FXCMAPI
@@ -24,22 +40,5 @@ Features:
 - Email notifications
 - Position size calculation
 
-Filter:
--------
-List of filter available for market analysis
-- New intraday High
-- New intraday Low
 
-Installation
---------------
-- Configuration Steps:
-      
-      configure file fxcm.cfg with your FXCM credentials 
-      configure file database.ini with database informations
 
-- Installation steps:
-
-      py db_create.py
-      py db_populate_instruments.py
-      py db_populate_prices.py 
-      
