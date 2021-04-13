@@ -20,10 +20,12 @@ Configuration Files:
       host = 127.0.0.1
       port = 5432
 
-- setup
+- Install dependences
       
       sudo apt-get update
-      sudo apt-get install python3-pip
+      sudo apt install python3-pip
+      sudo apt-get install gunicorn
+      sudo apt update
       
       pip install -r requirements.txt
       py db_create.py
