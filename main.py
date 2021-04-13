@@ -46,7 +46,13 @@ async def exchanges(request: Request):
 
 @app.get("/settings")
 async def settings(request: Request):
-    return templates.TemplateResponse("settings.html", {"request": request})
+
+    params = configemail()
+    del params['email_password']
+    dbparams = configdb()
+    del dbparams['password']
+
+    return templates.TemplateResponse("settings.html", {"request": request, "email_settings": params, "db_settings": dbparams })
 
 @app.get("/instruments/p/{page}")
 async def instrument(request: Request, page):
