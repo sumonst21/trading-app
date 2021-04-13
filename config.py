@@ -4,7 +4,7 @@ from configparser import ConfigParser
 def configemail():
 
     EMAIL_SETTINGS = {
-        'email_address': ''
+        'email_address': '',
         'email_password': '',
         'email_host': 'smtp.gmail.com',
         'email_port': 465,
