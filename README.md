@@ -1,16 +1,27 @@
 # fxmc-trading-app
 
 
-Configuration:
+Configuration Files:
 ---------
 
-- Configuration steps:
+- fxcm.cfg
 
-      configure file fxcm.cfg with your FXCM credentials (you need to creare a FXCM account to get api credentials)
-      configure file database.ini with your postgresql database, username, and password. 
+      [FXCM]
+      log_level = error
+      log_file = 'log.txt'
+      access_token = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
-- Installation steps:
+- database.ini
       
+      [postgresql]
+      database = tradingapp
+      user = postgres
+      password = xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      host = 127.0.0.1
+      port = 5432
+
+- setup
+
       pip install -r requirements.txt
       py db_create.py
       py db_populate_instruments.py
@@ -30,6 +41,8 @@ Technologies:
 - FastAPI
 - Semantic UI
 - Jinja2
+- backtrader
+- boto3
 
 Features:
 ---------
