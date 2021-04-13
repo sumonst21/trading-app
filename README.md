@@ -21,7 +21,10 @@ Configuration Files:
       port = 5432
 
 - setup
-
+      
+      sudo apt-get update
+      sudo apt-get install python3-pip
+      
       pip install -r requirements.txt
       py db_create.py
       py db_populate_instruments.py
