@@ -57,10 +57,9 @@ previous_day = today - dt.timedelta(days=1)
 now = dt.datetime.now()
 current_hour = now.strftime("%H") 
 timeframes = ['D1','H1']
-bars = 5
+bars = 30
 
 # 67 daily, 1355 hourly
-
 
 for timeframe in timeframes:
 

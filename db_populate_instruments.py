@@ -2,7 +2,7 @@ from os import close
 import psycopg2
 import psycopg2.extras
 from config import configdb
-from mlsc_utilities import fxcm_connect, ib_connect, db_connect, get_instruments_list
+from mlsc_utilities import fxcm_connect, db_connect, get_instruments_list
 
 # Connection to postgresql 
 conn = db_connect()   
@@ -12,8 +12,6 @@ cursor = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
 symbols = get_instruments_list()
 symbols_name = [ symbol[0] for symbol in symbols]
 
-# IB coneection
-ib = ib_connect()
 
 # FXCMapi connection
 api = fxcm_connect()
@@ -28,9 +26,6 @@ for asset in assets:
             except Exception as error:
                 print ("Oops! An exception has occured:", error)
                 print ("Exception TYPE:", type(error)) 
-
-# Broker 02
-
 
 conn.commit()
 conn.close()

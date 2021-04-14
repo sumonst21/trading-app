@@ -115,7 +115,7 @@ def get_instruments_list(marketids = []):
         marketids = tuple(marketids)
 
     cur.execute("""
-            SELECT t1.name, t1.id , t2.name, t1.market_id, t1.exchange FROM instruments t1, markets t2 WHERE t1.market_id = t2.id and t1.market_id in %s
+            SELECT t1.name, t1.id , t2.name, t1.market_id, t1.exchange_id FROM instruments t1, markets t2 WHERE t1.market_id = t2.id and t1.market_id in %s
         """, (marketids,))
     rows = cur.fetchall()
 

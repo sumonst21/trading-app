@@ -6,6 +6,11 @@ cursor = conn.cursor()
 
 # Database DROP tables
 try:
+
+    cursor.execute("""
+        DROP TABLE IF EXISTS exchanges
+    """)    
+
     cursor.execute("""
         DROP TABLE IF EXISTS alerts_symbol
     """)
