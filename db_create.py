@@ -6,6 +6,23 @@ cur = conn.cursor()
 
 # Database CREATE tables
 try:
+
+    # exchanges 
+
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS exchanges
+    (
+        id serial NOT NULL PRIMARY KEY,
+        exchange TEXT NOT NULL
+    )
+    """)   
+
+    exchanges = ['fxcm', 'interactive-brokers', ]
+    for exchange in exchanges:
+        cur.execute("""
+            INSERT INTO exchanges(exchange) VALUES (%s)
+        """, (exchange,))
+ 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS markets
     (
@@ -87,23 +104,6 @@ try:
         trade_id INT 
     )
     """)
-
-    # exchanges 
-
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS exchanges
-    (
-        id serial NOT NULL PRIMARY KEY,
-        exchange TEXT NOT NULL
-    )
-    """)   
-
-    exchanges = ['fxcm', 'interactive-brokers', ]
-    for exchange in exchanges:
-        cur.execute("""
-            INSERT INTO exchanges(exchange) VALUES (%s)
-        """, (exchange,))
- 
 
     conn.commit()
     conn.close()
