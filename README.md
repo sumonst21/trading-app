@@ -1,5 +1,9 @@
 # fxmc-trading-app
 
+Demo:
+---------
+http://13.236.69.31/
+
 
 Configuration Files:
 ---------
