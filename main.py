@@ -94,7 +94,7 @@ async def instrument(request: Request, page):
         WHERE 
             t1.market_id = t2.id and
             t1.market_id <> 1 and
-			cast(t1.exchange as int) = t3.id
+			t1.exchange_id = t3.id
         ORDER BY 
             t1.market_id, t1.name 
         LIMIT %s
