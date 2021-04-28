@@ -1,4 +1,17 @@
-# fxmc-trading-app
+Trading-app FXCM
+------------------------------------------
+
+Trading-app is a full-stack-app to trade forex markets using a FXCM api. 
+
+The application offers the following features:
+
+- Import list of market instruments FOREX, INDEX, COMMODITIES and STOCKS.
+- Get historical rates for any any day since 1999.
+- Trading view Widget integration
+- Breakout Strategy
+- Email notifications
+- Position size calculation
+
 
 Demo:
 ---------
@@ -36,6 +49,8 @@ Configuration Files:
       py db_populate_instruments.py
       py db_populate_prices.py 
       
+      gunicorn -w 1 -k uvicorn.workers.UvicornWorker main:app
+      
       
 Exchanges Available:
 ---------
@@ -52,15 +67,9 @@ Technologies:
 - Jinja2
 - backtrader
 - boto3
+- Amazon EC2
+- Amazon Relational Database Service RDS
 
-Features:
+Host:
 ---------
-- Import list of market instruments FOREX, INDEX, COMMODITIES and STOCKS.
-- Get historical rates for any any day since 1999.
-- Trading view Widget integration
-- Breakout Strategy
-- Email notifications
-- Position size calculation
-
-
-
+This application is configured to be deployed at Amazon Elastic Compute Cloud (EC2) 
