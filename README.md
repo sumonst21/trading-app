@@ -1,12 +1,12 @@
 Trading-app FXCM
 ------------------------------------------
 
-Trading-app is a full-stack-app to trade forex markets using a FXCM api. 
+Trading-app is a full-stack app to trade forex markets using the FXCM api. 
 
 The application offers the following features:
 
 - Import list of market instruments FOREX, INDEX, COMMODITIES and STOCKS.
-- Get historical rates for any any day since 1999.
+- Get historical rates for any day since 1999.
 - Trading view Widget integration
 - Breakout Strategy
 - Email notifications
